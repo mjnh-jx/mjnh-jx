@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>ajax的基本使用</h1>
+
+    <div id="info"></div>
+    <input type="text",name='' id="uname">
+    <input type="password" name="" id="pwd">
+    <input type="button" value="获取数据" onclick="sub()">
+    <input type="button" value="状态码" onclick="get_date()">
+
+
+    <table> 
+        <tr>
+            <td>用户名：</td>
+            <td><input type="text" name="" id="name"></td>
+        </tr>
+        <tr>
+            <td>密码：</td>
+            <td><input type="password" name="" id="psd"></td>
+        </tr>
+        <tr>
+            <td><input type="button" value="传递str" onclick="sub_str"></td>
+            <td><input type="button" value="传递json" onclick="sub_json"></td>
+        </tr>
+        </tr>
+    </table>
+
+    <script>
+
+        function form1(){           //ajax创建和使用
+            //创建ajax对象
+            let xhr = XMLHttpRequest()
+            //设置url
+            url='http'
+            //拼接请求参数
+            args = '?uname=sxt&pwd=123'
+            args2 = {'uname':'sxt', 'pwd':'123'}
+            //url = url+'?'+args
+            //设置请求的参数
+            xhr.open('GET','url')  //不能设置条件的过滤
+            //发送请求
+            xhr.send()
+            //获取响应数据
+            xhr.onload = function(){
+            //获取响应文本内容  
+            content = xhr.responseText
+            console.log(content);
+            info_tag = document.getElementById('info')
+            info_tag.innerHTML(content)  //写入div
+    }}
+        function sub(){             //get请求 通过putton触发 获得输入数据 
+            uname = document.getElementById('uname').value
+            pwd = document.getElementById('pwd').value
+            let xhr = XMLHttpRequest()
+            url='http'
+            args = '?uname='+uname+'&pwd='+pwd
+            url = url+args
+            xhr.open('GET','url')
+            xhr.send(args)
+            xhr.onload =() =>{
+                console.log(xhr.responseText);
+
+            }
+        }
+        function fenzhuang(){       //基本分装
+            sub_str({
+                type:'get',
+                url:'http',
+                data:{'name':'jx'}
+            })
+        }
+        function sub_str(option){   //post请求参数 string   
+            //获取input里面的数据
+            uname = document.getElementById('name').value
+            pwd = document.getElementById('psd').value
+            args = uname+pwd
+            let xhr = new XMLHttpRequest()
+            xhr.open(option.type,option.url)
+            //设置请求内容的类型
+            xhr.setRequestHeader('content-type','application/x-www-form-')
+            xhr.send(args)
+            xhr.onload=() => {
+                console.log(xhr.responseText);
+            }
+
+        }
+        function sub_json(option){  //post请求数据 json
+            uname = document.getElementById('name').value
+            pwd = document.getElementById('psd').value
+            args = {'uname': uname,'pwd':pwd}
+            //json转换成字符串
+            args = JSON.stringify(args)
+            let xhr = new XMLHttpRequest()
+            xhr.open('post','url')
+            //设置请求内容的类型
+            xhr.setRequestHeader('content-type','application/x-www-form-')
+            xhr.send(args)
+            xhr.onload=() => {
+                console.log(xhr.responseText);
+            }
+
+        }
+        function get_date(){        //判断状态码并响应
+            let xhr = XMLHttpRequest()
+            xhr.open('GET','url')  
+            xhr.send()
+            xhr.onreadystatechange =() =>{
+                //判断ajax的状态码
+                if(xhr.readystate == 4){
+                    //进一步判断
+                    if(xhr.status==200){
+                        console.log(xhr.responseText);
+                        data = JSON.parse(xhr.responseText)
+                        console.log(data);
+                        console.log(xhr.status);
+                    }
+                    else{
+                        //如果没有做出响应
+                        console.log(xhr.status);
+                    }
+                }
+            }
+            xhr.onerror=() =>{
+                console.log('网络出错了');
+            }
+        
+        }
+
+
+
+
+        
+    
+    
+    
+    
+    
+    
+    </script>
+
+
+</body>
+</html>
